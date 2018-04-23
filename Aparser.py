@@ -1,10 +1,18 @@
-import psutil
-partition = psutil.disk_partitions()
-test = psutil.disk_mountpoints()
-print(type(partition))
-print(test)
-#print(partition)
-#for mountpoint in disk_partitions :
-print (psutil.mountpoint) 
-handle = open('/dev/disk2', 'rb')
+import psutil, os, sys
+from optparse import OptionParser
+
+DiskList = os.system("diskutil list") 
+user_input = input("Choose Your Disk ex) /dev/disk2 : ")
+
+
+handle = open(user_input, 'rb')
 print (handle)
+handle.seek(1024)
+mbr = handle.read(512)
+
+if ord(chr(mbr[510])) == 0x55 and ord(chr(mbr[511])) == 0xAA :
+	print ('MBR Read Success')
+else :
+	print ('MBR Read Fail')
+
+print (mbr)
